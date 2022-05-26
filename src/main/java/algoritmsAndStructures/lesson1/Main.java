@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println(exponentiate(2, -22));
         System.out.println(exponentiateParity(2, -22));
-        System.out.println(sequenceSum(1, 101));
+        System.out.println(sequenceSum(0, 100));
     }
 
     private static int sequenceSum(int startNum, int endNum) {
