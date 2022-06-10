@@ -1,6 +1,6 @@
 package homework12;
 
-import java.sql.Array;
+import javax.sound.midi.Soundbank;
 import java.util.Arrays;
 
 public class Main {
@@ -12,16 +12,15 @@ public class Main {
 
     }
 
-    private static final int SIZE = 10000000;
+    private static final int SIZE = 10;
 
     private static void testSingleThread() {
         float[] arr = new float[SIZE];
         Arrays.fill(arr, 1);
         long timeStamp = System.currentTimeMillis();
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = (float)(arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) *
-                    Math.cos(0.4f + i / 2));
-        }
+        processArray(arr, 0);
+
+        System.out.println(Arrays.toString(arr));
         System.out.printf("Time for single thread %d ms%n", System.currentTimeMillis() - timeStamp);
     }
 
@@ -35,8 +34,8 @@ public class Main {
         System.arraycopy(arr, 0, arr1, 0, arr1.length);
         System.arraycopy(arr, arr2.length, arr2, 0, arr2.length);
 
-        Thread t1 = new Thread(() -> processArray(arr1));
-        Thread t2 = new Thread(() -> processArray(arr2));
+        Thread t1 = new Thread(() -> processArray(arr1, 0));
+        Thread t2 = new Thread(() -> processArray(arr2, arr2.length));
 
         t1.start();
         t2.start();
@@ -46,14 +45,16 @@ public class Main {
 
         System.arraycopy(arr1, 0, arr, 0, arr1.length);
         System.arraycopy(arr2, 0, arr, arr2.length, arr2.length);
-
+        System.out.println(Arrays.toString(arr));
         System.out.printf("Time for double thread %d ms%n", System.currentTimeMillis() - timeStamp);
     }
 
-    private static void processArray(float[] arr) {
+    private static void processArray(float[] arr, int bias) {
+        int j;
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = (float) (arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) *
-                    Math.cos(0.4f + i / 2));
+            j = i + bias;
+            arr[i] = (float) (arr[i] * Math.sin(0.2f + j / 5) * Math.cos(0.2f + j / 5) *
+                    Math.cos(0.4f + j / 2));
         }
     }
 
